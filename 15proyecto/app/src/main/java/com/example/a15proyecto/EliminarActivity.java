@@ -32,6 +32,8 @@ public class EliminarActivity extends AppCompatActivity {
     Button btnCancelar;
     Button btnAceptar;
 
+    Button btnSearch;
+
     EditText txtNom;
     EditText txtCosto;
     EditText txtFecha;
@@ -54,11 +56,13 @@ public class EliminarActivity extends AppCompatActivity {
         });
         btnCancelar = (Button) findViewById(R.id.button8);
         btnAceptar = (Button) findViewById(R.id.button);
+        btnSearch = (Button) findViewById(R.id.button15);
 
         txtNom = (EditText) findViewById(R.id.editTextText);
         txtCosto = (EditText) findViewById(R.id.editTextNumberDecimal2);
         txtID = (EditText) findViewById(R.id.editTextNumber2);
         txtFoto = (Spinner) findViewById(R.id.spinner2);
+        txtFecha = (EditText) findViewById(R.id.editTextText5);
         ArrayList<String> objetivo = new ArrayList<String>();
         objetivo.add("img1.jpg");
         objetivo.add("img2.jpg");
@@ -94,6 +98,41 @@ public class EliminarActivity extends AppCompatActivity {
             }
         });
 
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnSearchClick(v);
+            }
+        });
+
+    }
+
+    public void btnSearchClick(View v) {
+        String id = txtID.getText().toString();
+        //url = "https://serviciosdigitalesplus.com/distribuida2024/procesos.php?tipo=2&id=200&nom=teclado&costo=300&foto=teclado.jpg&fecha=12/12/23&form=MG0AV3";
+        String url = "https://serviciosdigitalesplus.com/distribuida2024/procesos.php?tipo=5&id="+id+"&form=MG0AV3";
+        requestQueue = Volley.newRequestQueue(this);
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject data = response.getJSONArray("array").getJSONObject(0);
+                    txtNom.setText(data.getString("nom"));
+                    txtCosto.setText(data.getString("costo"));
+                    txtFecha.setText(data.getString("fecha"));
+                    alerta("Se encontro el articulo", "Informacion");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    alerta("No se encontro el articulo", "Error");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("web error");
+            }
+        });
+        requestQueue.add(jsonObjectRequest);/**/
     }
     public void btnAceptarClick(View v) {
         String id = txtID.getText().toString();
