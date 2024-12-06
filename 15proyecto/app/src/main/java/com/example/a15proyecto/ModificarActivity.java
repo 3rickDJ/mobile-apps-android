@@ -30,6 +30,7 @@ import java.util.ArrayList;
 public class ModificarActivity extends AppCompatActivity {
     Button btnCancelar;
     Button btnAceptar;
+    Button btnSearch;
 
     EditText txtNom;
     EditText txtCosto;
@@ -53,11 +54,13 @@ public class ModificarActivity extends AppCompatActivity {
         });
         btnCancelar = (Button) findViewById(R.id.button10);
         btnAceptar = (Button) findViewById(R.id.button9);
+        btnSearch = (Button) findViewById(R.id.button14);
 
         txtNom = (EditText) findViewById(R.id.editTextText2);
         txtCosto = (EditText) findViewById(R.id.editTextNumberDecimal3);
         txtID = (EditText) findViewById(R.id.editTextNumber3);
         txtFoto = (Spinner) findViewById(R.id.spinner3);
+        txtFecha = (EditText) findViewById(R.id.editTextText4);
         ArrayList<String> objetivo = new ArrayList<String>();
         objetivo.add("img1.jpg");
         objetivo.add("img2.jpg");
@@ -92,17 +95,61 @@ public class ModificarActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnSearchClick(v);
+            }
+        });
+    }
+
+    public void btnSearchClick(View v) {
+        String id = txtID.getText().toString();
+        String url = "https://serviciosdigitalesplus.com/distribuida2024/procesos.php?tipo=5&id="+id+"&form=MG0AV3";
+        requestQueue = Volley.newRequestQueue(this);
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    // Extraer el array del JSON
+                    JSONObject data = response.getJSONArray("array").getJSONObject(0);
+
+                    // Establecer los valores en los EditTexts
+                    System.out.println("HOLA");
+                    System.out.println(data.getString("nom"));
+                    txtNom.setText(data.getString("nom"));
+                    System.out.println(data.getString("costo"));
+                    txtCosto.setText(data.getString("costo"));
+                    System.out.println(data.getString("fecha"));
+                    txtFecha.setText(data.getString("fecha"));
+                    System.out.println("Que pedo jaja");
+
+                    // Mostrar alerta de éxito
+                    alerta("Se encontraron los datos", "Información");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    alerta("No se encontró el artículo", "Error");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("web error");
+            }
+        });
+        requestQueue.add(jsonObjectRequest);/**/
     }
     public void btnAceptarClick(View v) {
         String id = txtID.getText().toString();
         String nom = txtNom.getText().toString();
         String foto = "";
         String costo = txtCosto.getText().toString();
-        String fecha = "";
+        String fecha = txtFecha.getText().toString();
 
         //System.out.println(id+" "+nom+" "+costo);
 
-        String url = "https://serviciosdigitalesplus.com/distribuida2024/procesos.php?tipo=2&id="+id+"&nom="+nom+"&costo="+costo+"&foto="+spinner+"&fecha=12/12/23&form=MG0AV3";
+        String url = "https://serviciosdigitalesplus.com/distribuida2024/procesos.php?tipo=2&id="+id+"&nom="+nom+"&costo="+costo+"&foto="+spinner+"&fecha="+fecha+"&form=MG0AV3";
         requestQueue = Volley.newRequestQueue(this);
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -111,6 +158,7 @@ public class ModificarActivity extends AppCompatActivity {
                 txtID.setText("");
                 txtNom.setText("");
                 txtCosto.setText("");
+                txtFecha.setText("");
                 alerta("Se Modifico","Informacion");
             }
         }, new Response.ErrorListener() {

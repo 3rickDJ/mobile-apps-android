@@ -12,10 +12,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    Button btn2;
-    Button btn3;
-    Button btn4;
-    Button btn5;
+    Button btnCrear;
+    Button btnModificar;
+    Button btnEliminar;
+    Button btnMostrar;
+    Button btnBuscar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,26 +27,31 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        btn2 = (Button) findViewById(R.id.button2);
-        btn3 = (Button) findViewById(R.id.button3);
-        btn4 = (Button) findViewById(R.id.button4);
-        btn5 = (Button) findViewById(R.id.button5);
+        btnCrear = (Button) findViewById(R.id.button2);
+        btnModificar = (Button) findViewById(R.id.button3);
+        btnEliminar = (Button) findViewById(R.id.button4);
+        btnMostrar = (Button) findViewById(R.id.button5);
+        btnBuscar = (Button) findViewById(R.id.button6);
 
-        btn2.setOnClickListener(new View.OnClickListener() {
+        btnCrear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {formCrear();}
         });
-        btn3.setOnClickListener(new View.OnClickListener() {
+        btnModificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {formModificar();}
         });
-        btn4.setOnClickListener(new View.OnClickListener() {
+        btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {formEliminar();}
         });
-        btn5.setOnClickListener(new View.OnClickListener() {
+        btnMostrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {formMostrar();}
+        });
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {formBuscar();}
         });
 
     }
@@ -63,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public void formMostrar(){
         Intent i = new Intent(this, MostrarActivity.class);
+        startActivity(i);
+    }
+
+    public void formBuscar(){
+        Intent i = new Intent(this, BuscarActivity.class);
         startActivity(i);
     }
 }
